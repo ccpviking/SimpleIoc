@@ -14,14 +14,15 @@ namespace simple_ioc_tests
 			_ioc = new SimpleIoc();
 		}
 
-		[Fact]
-		public void TestClearingIocOfAnObject()
-		{
-			_ioc.Register<ITestObject, TestObject>(new TestObject(), LifecycleScope.Singleton);
-			Assert.True(_ioc.IsRegistered(typeof(ITestObject)));
-			_ioc.Clear<ITestObject>();
-			Assert.Null(_ioc.Resolve<ITestObject>());
-		}
+		// Removed test because of the requirement to throw an exception when requesting a non-existing object.
+		// [Fact]
+		// public void TestClearingIocOfAnObject()
+		// {
+		// 	_ioc.Register<ITestObject, TestObject>(new TestObject(), LifecycleScope.Singleton);
+		// 	Assert.True(_ioc.IsRegistered(typeof(ITestObject)));
+		// 	_ioc.Clear<ITestObject>();
+		// 	Assert.Null(_ioc.Resolve<ITestObject>());
+		// }
 
 		[Fact]
 		public void TestInstanceSingletonScope()
@@ -69,6 +70,21 @@ namespace simple_ioc_tests
 			finally
 			{
 				_ioc.Clear<ITestObject>();
+			}
+		}
+
+		[Fact]
+		public void ResolvingANonExistingRegistryThrowsException()
+		{
+			_ioc.Clear<ITestObject>(); // sanity check
+			try
+			{
+				_ioc.Resolve<ITestObject>();
+			}
+			catch (System.Exception ex)
+			{
+				Assert.IsType<ApplicationException>(ex);
+				Assert.EndsWith("is not registered.", ex.Message);
 			}
 		}
 	}

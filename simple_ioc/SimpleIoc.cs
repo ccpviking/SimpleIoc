@@ -50,10 +50,14 @@ namespace simple_ioc
 		// Gets the object registered to the type 'T'
 		public T Resolve<T>() where T : class
 		{
+			var type = typeof(T);
 			IocEntry entry;
-			if (!_factoryTable.TryGetValue(typeof(T), out entry))
+			if (!_factoryTable.TryGetValue(type, out entry))
 			{
-				return default(T);
+				throw new ApplicationException($"{type} is not registered.");
+				// Personally I would rather just return a null than throw an exception
+				// because a requesting a non-existing element should be a null and not an error.
+				//return default(T);
 			}
 			var value = entry.Scope == LifecycleScope.Transient ? entry.GetValue<T>() : (T)entry.GetValue();
 			return value;
