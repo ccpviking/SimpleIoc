@@ -7,7 +7,7 @@ $ dotnet build
 ```
 
 ## Test SimpleIoc
-From the < Project > folder:
+From the < Project >/simple_ioc_test/ folder:
 ```
 $ dotnet restore
 $ dotnet build
